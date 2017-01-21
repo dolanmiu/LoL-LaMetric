@@ -9,5 +9,5 @@ export interface IConfig {
 
 export class Config implements IConfig {
     public port = 9000;
-    public apiKey = "enter here";
+    public apiKey = process.env.RIOT_API_KEY;
 }
