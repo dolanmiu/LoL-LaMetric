@@ -1,0 +1,51 @@
+{
+  "name": "lol-lametric",
+  "version": "1.0.0",
+  "description": "Leage of Legends LaMetric app",
+  "main": "dist/index.js",
+  "scripts": {
+    "pretest": "tsc --p .",
+    "test": "npm run lint",
+    "prestart": "rimraf dist && tsc --p .",
+    "start": "node ./dist/index.js",
+    "lint": "tslint --project .",
+    "mocha": "mocha ./dist/**/*.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dolanmiu/LoL-LaMetric.git"
+  },
+  "keywords": [
+    "LaMetric",
+    "League",
+    "of",
+    "legends",
+    "LoL",
+    "stats"
+  ],
+  "author": "Dolan Miu",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/dolanmiu/LoL-LaMetric/issues"
+  },
+  "homepage": "https://github.com/dolanmiu/LoL-LaMetric#readme",
+  "dependencies": {
+    "@types/morgan": "^1.7.32",
+    "body-parser": "^1.16.0",
+    "compression": "^1.6.2",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
+    "request": "^2.79.0",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/body-parser": "0.0.33",
+    "@types/compression": "0.0.33",
+    "@types/express": "^4.0.35",
+    "@types/node": "^7.0.0",
+    "@types/request": "0.0.39",
+    "rimraf": "^2.5.4",
+    "tslint": "^4.3.1",
+    "typescript": "^2.1.5"
+  }
+}
