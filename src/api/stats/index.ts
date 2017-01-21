@@ -11,7 +11,7 @@ export class StatsRouter {
 
     public init(): void {
         this.router.get("/", (req: Request, res: Response) => {
-
+            res.status(200).send("works");
         });
     }
 }
