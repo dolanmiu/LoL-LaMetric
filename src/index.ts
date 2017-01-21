@@ -9,7 +9,7 @@ const appWrapper = new ApplicationWrapper(config);
 
 appWrapper.configure((app) => {
     logger.info("Configuring application routes");
-    app.use("/stats", new StatsRouter().router);
+    app.use("/stats", new StatsRouter(config.apiKey).router);
 });
 
 appWrapper.start();
