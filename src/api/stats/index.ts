@@ -28,7 +28,7 @@ export class StatsRouter {
                 res.status(400).send("name and region cannot be empty");
                 return;
             }
-            request.get(`https://global.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, (error, response, body) => {
+            request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     res.status(500).send(error);
                     logger.error(error);
@@ -59,7 +59,7 @@ export class StatsRouter {
 
     private getStats(summonerId: number, region: string): Promise<AggregatedStats> {
         return new Promise<AggregatedStats>((resolve, reject) => {
-            request.get(`https://global.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/summary?&api_key=${this.apiKey}`, (error, response, body) => {
+            request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/summary?&api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     reject(error);
                     logger.error(error);
@@ -76,7 +76,7 @@ export class StatsRouter {
 
     private getChamps(summonerId: number, region: string): Promise<ChampSummary> {
         return new Promise<ChampSummary>((resolve, reject) => {
-            request.get(`https://global.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/ranked?api_key=${this.apiKey}`, (error, response, body) => {
+            request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/ranked?api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     reject(error);
                     logger.error(error);
@@ -84,6 +84,13 @@ export class StatsRouter {
                 }
 
                 const champResponse = JSON.parse(body) as ChampsResponse;
+
+                if (champResponse === undefined) {
+                    reject("No Champions found");
+                    logger.error("No Champions found");
+                    logger.error(body);
+                    return;
+                }
 
                 const champs = this.champTransformer.transform(champResponse.champions, (stats) => {
                     resolve(stats);

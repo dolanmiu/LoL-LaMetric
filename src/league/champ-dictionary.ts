@@ -17,6 +17,7 @@ export class ChampDictionary {
         }
 
         this.promise = this.createPromise();
+        return this.promise;
     }
 
     public get Promise(): Promise<{ [index: string]: Champion; }> {
