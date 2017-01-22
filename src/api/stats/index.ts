@@ -26,6 +26,7 @@ export class StatsRouter {
 
             if (name === undefined || region === undefined) {
                 res.status(400).send("name and region cannot be empty");
+                return;
             }
             request.get(`https://global.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
