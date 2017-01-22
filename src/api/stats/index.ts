@@ -4,8 +4,8 @@ import * as logger from "winston";
 import { ChampDictionary } from "../../league/champ-dictionary";
 import { ChampsTransformer } from "../../league/champs-transformer";
 import { StatsTransformer } from "../../league/stats-transformer";
+import { Utility } from "../../utility";
 import { LaMetricFormatter } from "./lametric-formatter";
-
 export class StatsRouter {
     public router: Router;
     private statsTransformer: StatsTransformer;
@@ -49,8 +49,9 @@ export class StatsRouter {
 
                 const statsPromise = this.getStats(summoner.id, region);
                 const champsPromise = this.getChamps(summoner.id, region);
+                const previousChampsPromise = this.getChampsPreviousSeason(summoner.id, region);
 
-                Promise.all([statsPromise, champsPromise]).then((stats) => {
+                Promise.all([statsPromise, champsPromise, previousChampsPromise]).then((stats) => {
                     const laMetricOutput = this.laMetricFormatter.format(stats);
                     res.status(200).json(laMetricOutput);
                 });
@@ -76,8 +77,16 @@ export class StatsRouter {
     }
 
     private getChamps(summonerId: number, region: string): Promise<ChampSummary> {
+        return this.getChampsGeneric(`https://${region}.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/ranked?api_key=${this.apiKey}`);
+    }
+
+    private getChampsPreviousSeason(summonerId: number, region: string): Promise<ChampSummary> {
+        return this.getChampsGeneric(`https://${region}.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/ranked?season=SEASON${Utility.currentRankedYear - 1}&api_key=${this.apiKey}`);
+    }
+
+    private getChampsGeneric(url: string): Promise<ChampSummary> {
         return new Promise<ChampSummary>((resolve, reject) => {
-            request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/ranked?api_key=${this.apiKey}`, (error, response, body) => {
+            request.get(url, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     reject(error);
                     logger.error(error);

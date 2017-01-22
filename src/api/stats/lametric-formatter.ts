@@ -1,3 +1,5 @@
+import { Utility } from "../../utility";
+
 interface ILaMetricOutput {
     frames: ILaMetricFrame[];
 }
@@ -10,11 +12,12 @@ interface ILaMetricFrame {
 const LOGO_ICON_STRING = "i7386";
 
 export class LaMetricFormatter {
-    public format(data: [AggregatedStats, ChampSummary]): ILaMetricOutput {
+    public format(data: [AggregatedStats, ChampSummary, ChampSummary]): ILaMetricOutput {
         const frames: ILaMetricFrame[] = [];
         const aggregatedStats = data[0];
         const champStats = data[1];
-        const currentYear = new Date().getFullYear();
+        const previousChampStats = data[2];
+        const currentYear = Utility.currentRankedYear;
 
         frames.push({
             text: `Total Assists: ${aggregatedStats.totalAssists}`,
@@ -70,6 +73,9 @@ export class LaMetricFormatter {
             text: `Penta Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalPentaKills}`,
             icon: LOGO_ICON_STRING,
         });
+
+        frames.push(this.calculateHowManyExtraGamesWon(champStats.summary, previousChampStats.summary));
+
         return {
             frames,
         };
@@ -82,5 +88,25 @@ export class LaMetricFormatter {
             return "1.00";
         }
         return rawRatio.toFixed(2);
+    }
+
+    private calculateHowManyExtraGamesWon(thisSeasonStats: AggregatedChampStats, lastSeasonStats: AggregatedChampStats): ILaMetricFrame {
+        const thisSeasonWinRatio = this.getRatio(thisSeasonStats.stats.totalSessionsWon, thisSeasonStats.stats.totalSessionsLost);
+        const lastSeasonWinRatio = this.getRatio(lastSeasonStats.stats.totalSessionsWon, lastSeasonStats.stats.totalSessionsLost);
+
+        const totalWonRatio = this.getRatio(parseFloat(thisSeasonWinRatio), parseFloat(lastSeasonWinRatio));
+        const totalWonRatioNumber = parseFloat(totalWonRatio);
+
+        if (totalWonRatioNumber > 1) {
+            return {
+                text: `You have won ${totalWonRatio} times compared to Ranked ${Utility.currentRankedYear - 1}`,
+                icon: LOGO_ICON_STRING,
+            };
+        } else {
+            return {
+                text: `You have lost ${totalWonRatio} times compared to Ranked ${Utility.currentRankedYear - 1}`,
+                icon: LOGO_ICON_STRING,
+            };
+        }
     }
 }
