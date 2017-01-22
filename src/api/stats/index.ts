@@ -27,13 +27,19 @@ export class StatsRouter {
             if (name === undefined || region === undefined) {
                 res.status(400).send("name and region cannot be empty");
             }
-            request.get(`https://euw.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, (error, response, body) => {
+            request.get(`https://global.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     res.status(500).send(error);
+                    logger.error(error);
                     return;
                 }
 
                 const summoner = JSON.parse(body)[name] as Summoner;
+
+                if (summoner === undefined) {
+                    res.status(500).send("No summoner found");
+                    return;
+                }
 
                 const statsPromise = this.getStats(summoner.id, region);
                 const champsPromise = this.getChamps(summoner.id, region);
@@ -50,7 +56,7 @@ export class StatsRouter {
 
     private getStats(summonerId: number, region: string): Promise<AggregatedStats> {
         return new Promise<AggregatedStats>((resolve, reject) => {
-            request.get(`https://euw.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/summary?&api_key=${this.apiKey}`, (error, response, body) => {
+            request.get(`https://global.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/summary?&api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     reject(error);
                     logger.error(error);
@@ -67,7 +73,7 @@ export class StatsRouter {
 
     private getChamps(summonerId: number, region: string): Promise<ChampSummary> {
         return new Promise<ChampSummary>((resolve, reject) => {
-            request.get(`https://euw.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/ranked?api_key=${this.apiKey}`, (error, response, body) => {
+            request.get(`https://global.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/ranked?api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     reject(error);
                     logger.error(error);
