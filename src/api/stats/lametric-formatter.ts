@@ -52,22 +52,22 @@ export class LaMetricFormatter {
         });
 
         frames.push({
-            text: `Total Double Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalDoubleKills}`,
+            text: `Double Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalDoubleKills}`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Total Triple Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalTripleKills}`,
+            text: `Triple Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalTripleKills}`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Total Quadra Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalQuadraKills}`,
+            text: `Quadra Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalQuadraKills}`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Total Penta Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalPentaKills}`,
+            text: `Penta Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalPentaKills}`,
             icon: LOGO_ICON_STRING,
         });
         return {
