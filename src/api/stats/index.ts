@@ -39,6 +39,8 @@ export class StatsRouter {
 
                 if (summoner === undefined) {
                     res.status(500).send("No summoner found");
+                    logger.error("No summoner found");
+                    logger.error(body);
                     return;
                 }
 
