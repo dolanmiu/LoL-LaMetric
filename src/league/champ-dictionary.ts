@@ -6,7 +6,9 @@ export class ChampDictionary {
     private promise: Promise<{ [index: string]: Champion; }>;
 
     constructor(private apiKey: string) {
-
+        setInterval(() => {
+            this.promise = this.createPromise();
+        }, 86400000);
     }
 
     public fetch(): Promise<{ [index: string]: Champion; }> {
@@ -14,7 +16,15 @@ export class ChampDictionary {
             return this.promise;
         }
 
-        this.promise = new Promise<{ [index: string]: Champion; }>((resolve, reject) => {
+        this.promise = this.createPromise();
+    }
+
+    public get Promise(): Promise<{ [index: string]: Champion; }> {
+        return this.promise;
+    }
+
+    private createPromise(): Promise<{ [index: string]: Champion; }> {
+        return new Promise<{ [index: string]: Champion; }>((resolve, reject) => {
             request.get(`https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion?api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     reject(error);
@@ -27,12 +37,6 @@ export class ChampDictionary {
                 resolve(idDictionary);
             });
         });
-
-        return this.promise;
-    }
-
-    public get Promise(): Promise<{ [index: string]: Champion; }> {
-        return this.promise;
     }
 
     private mapChampsToId(champs: { [index: string]: Champion }): { [index: number]: Champion } {
