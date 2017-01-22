@@ -24,8 +24,8 @@ export class StatsRouter {
 
     public init(): void {
         this.router.get("/", (req: Request, res: Response) => {
-            const name = req.query.name;
-            const region = req.query.region;
+            const name: string = req.query.name;
+            const region: string = req.query.region;
 
             if (name === undefined || region === undefined) {
                 res.status(400).send("name and region cannot be empty");
@@ -38,7 +38,7 @@ export class StatsRouter {
                     return;
                 }
 
-                const summoner = JSON.parse(body)[name] as Summoner;
+                const summoner = JSON.parse(body)[name.toLowerCase()] as Summoner;
 
                 if (summoner === undefined) {
                     res.status(500).send("No summoner found");
