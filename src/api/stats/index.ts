@@ -4,12 +4,14 @@ import * as logger from "winston";
 import { ChampDictionary } from "../../league/champ-dictionary";
 import { ChampsTransformer } from "../../league/champs-transformer";
 import { StatsTransformer } from "../../league/stats-transformer";
+import { LaMetricFormatter } from "./lametric-formatter";
 
 export class StatsRouter {
     public router: Router;
     private statsTransformer: StatsTransformer;
     private champTransformer: ChampsTransformer;
     private champDictionary: ChampDictionary;
+    private laMetricFormatter: LaMetricFormatter;
 
     constructor(private apiKey: string) {
         this.router = Router();
@@ -17,6 +19,7 @@ export class StatsRouter {
         this.statsTransformer = new StatsTransformer();
         this.champDictionary = new ChampDictionary(apiKey);
         this.champTransformer = new ChampsTransformer(this.champDictionary.fetch());
+        this.laMetricFormatter = new LaMetricFormatter();
     }
 
     public init(): void {
@@ -48,10 +51,8 @@ export class StatsRouter {
                 const champsPromise = this.getChamps(summoner.id, region);
 
                 Promise.all([statsPromise, champsPromise]).then((stats) => {
-                    res.status(200).json({
-                        general: stats[0],
-                        champion: stats[1],
-                    });
+                    const laMetricOutput = this.laMetricFormatter.format(stats);
+                    res.status(200).json(laMetricOutput);
                 });
             });
         });
