@@ -20,17 +20,17 @@ export class StatsRouter {
     }
 
     public init(): void {
-        this.router.get("/:region/:name", (req: Request, res: Response) => {
-            request.get(`https://euw.api.pvp.net/api/lol/${req.params.region}/v1.4/summoner/by-name/${req.params.name}?api_key=${this.apiKey}`, (error, response, body) => {
+        this.router.get("/", (req: Request, res: Response) => {
+            request.get(`https://euw.api.pvp.net/api/lol/${req.query.region}/v1.4/summoner/by-name/${req.query.name}?api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     res.status(500).send(error);
                     return;
                 }
 
-                const summoner = JSON.parse(body)[req.params.name] as Summoner;
+                const summoner = JSON.parse(body)[req.query.name] as Summoner;
 
-                const statsPromise = this.getStats(summoner.id, req.params.region);
-                const champsPromise = this.getChamps(summoner.id, req.params.region);
+                const statsPromise = this.getStats(summoner.id, req.query.region);
+                const champsPromise = this.getChamps(summoner.id, req.query.region);
 
                 Promise.all([statsPromise, champsPromise]).then((stats) => {
                     res.status(200).json({
