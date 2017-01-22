@@ -21,16 +21,22 @@ export class StatsRouter {
 
     public init(): void {
         this.router.get("/", (req: Request, res: Response) => {
-            request.get(`https://euw.api.pvp.net/api/lol/${req.query.region}/v1.4/summoner/by-name/${req.query.name}?api_key=${this.apiKey}`, (error, response, body) => {
+            const name = req.query.name;
+            const region = req.query.region;
+
+            if (name === undefined || region === undefined) {
+                res.status(400).send("name and region cannot be empty");
+            }
+            request.get(`https://euw.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, (error, response, body) => {
                 if (error && response.statusCode !== 200) {
                     res.status(500).send(error);
                     return;
                 }
 
-                const summoner = JSON.parse(body)[req.query.name] as Summoner;
+                const summoner = JSON.parse(body)[name] as Summoner;
 
-                const statsPromise = this.getStats(summoner.id, req.query.region);
-                const champsPromise = this.getChamps(summoner.id, req.query.region);
+                const statsPromise = this.getStats(summoner.id, region);
+                const champsPromise = this.getChamps(summoner.id, region);
 
                 Promise.all([statsPromise, champsPromise]).then((stats) => {
                     res.status(200).json({
