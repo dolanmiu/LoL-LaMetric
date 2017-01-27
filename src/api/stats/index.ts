@@ -32,7 +32,7 @@ export class StatsRouter {
                 return;
             }
             request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, (error, response, body) => {
-                if (error && response.statusCode !== 200) {
+                if (response === undefined || (error && response.statusCode !== 200)) {
                     res.status(500).send(error);
                     logger.error(error);
                     return;
@@ -62,7 +62,7 @@ export class StatsRouter {
     private getStats(summonerId: number, region: string): Promise<AggregatedStats> {
         return new Promise<AggregatedStats>((resolve, reject) => {
             request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/summary?&api_key=${this.apiKey}`, (error, response, body) => {
-                if (error && response.statusCode !== 200) {
+                if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(error);
                     logger.error(error);
                     return;
@@ -87,7 +87,7 @@ export class StatsRouter {
     private getChampsGeneric(url: string): Promise<ChampSummary> {
         return new Promise<ChampSummary>((resolve, reject) => {
             request.get(url, (error, response, body) => {
-                if (error && response.statusCode !== 200) {
+                if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(error);
                     logger.error(error);
                     return;

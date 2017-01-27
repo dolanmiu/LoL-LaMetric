@@ -27,7 +27,7 @@ export class ChampDictionary {
     private createPromise(): Promise<{ [index: string]: Champion; }> {
         return new Promise<{ [index: string]: Champion; }>((resolve, reject) => {
             request.get(`https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion?api_key=${this.apiKey}`, (error, response, body) => {
-                if (error && response.statusCode !== 200) {
+                if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(error);
                     logger.error(error);
                     return;
