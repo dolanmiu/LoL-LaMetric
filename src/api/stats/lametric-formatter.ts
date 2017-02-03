@@ -44,37 +44,58 @@ export class LaMetricFormatter {
             icon: LOGO_ICON_STRING,
         });
 
-        frames.push({
-            text: `Games Played in Ranked ${currentYear}: ${champStats.summary.stats.totalSessionsPlayed}`,
-            icon: LOGO_ICON_STRING,
-        });
+        if (champStats !== undefined) {
+            frames.push({
+                text: `Games Played in Ranked ${currentYear}: ${champStats.summary.stats.totalSessionsPlayed}`,
+                icon: LOGO_ICON_STRING,
+            });
+        }
 
-        frames.push({
-            text: `W/L Ratio in Ranked ${currentYear}: ${this.getRatio(champStats.summary.stats.totalSessionsWon, champStats.summary.stats.totalSessionsLost)}`,
-            icon: LOGO_ICON_STRING,
-        });
+        if (champStats !== undefined) {
+            frames.push({
+                text: `W/L Ratio in Ranked ${currentYear}: ${this.getRatio(champStats.summary.stats.totalSessionsWon, champStats.summary.stats.totalSessionsLost)}`,
+                icon: LOGO_ICON_STRING,
+            });
+        }
 
-        frames.push({
-            text: `Double Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalDoubleKills}`,
-            icon: LOGO_ICON_STRING,
-        });
+        if (champStats !== undefined) {
+            frames.push({
+                text: `Double Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalDoubleKills}`,
+                icon: LOGO_ICON_STRING,
+            });
+        }
 
-        frames.push({
-            text: `Triple Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalTripleKills}`,
-            icon: LOGO_ICON_STRING,
-        });
+        if (champStats !== undefined) {
+            frames.push({
+                text: `Triple Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalTripleKills}`,
+                icon: LOGO_ICON_STRING,
+            });
+        }
 
-        frames.push({
-            text: `Quadra Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalQuadraKills}`,
-            icon: LOGO_ICON_STRING,
-        });
+        if (champStats !== undefined) {
+            frames.push({
+                text: `Quadra Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalQuadraKills}`,
+                icon: LOGO_ICON_STRING,
+            });
+        }
 
-        frames.push({
-            text: `Penta Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalPentaKills}`,
-            icon: LOGO_ICON_STRING,
-        });
+        if (champStats !== undefined) {
+            frames.push({
+                text: `Penta Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalPentaKills}`,
+                icon: LOGO_ICON_STRING,
+            });
+        }
 
-        frames.push(this.calculateHowManyExtraGamesWon(champStats.summary, previousChampStats.summary));
+        if (champStats !== undefined && previousChampStats !== undefined) {
+            frames.push(this.calculateHowManyExtraGamesWon(champStats.summary, previousChampStats.summary));
+        }
+
+        if (champStats === undefined) {
+            frames.push({
+                text: `For more stats, play some games in ranked`,
+                icon: LOGO_ICON_STRING,
+            });
+        }
 
         return {
             frames,

@@ -31,6 +31,7 @@ export class StatsRouter {
                 res.status(400).send("name and region cannot be empty");
                 return;
             }
+
             request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, (error, response, body) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
                     res.status(500).send(error);
@@ -38,7 +39,7 @@ export class StatsRouter {
                     return;
                 }
 
-                const summoner = JSON.parse(body)[name.toLowerCase()] as Summoner;
+                const summoner = JSON.parse(body)[name.replace(/\s/g, "").toLowerCase()] as Summoner;
 
                 if (summoner === undefined) {
                     res.status(500).send("No summoner found");
@@ -54,6 +55,10 @@ export class StatsRouter {
                 Promise.all([statsPromise, champsPromise, previousChampsPromise]).then((stats) => {
                     const laMetricOutput = this.laMetricFormatter.format(stats);
                     res.status(200).json(laMetricOutput);
+                }).catch(() => {
+                    res.status(500).json({
+                        text: "Something went wrong with the server",
+                    });
                 });
             });
         });
@@ -95,10 +100,10 @@ export class StatsRouter {
 
                 const champResponse = JSON.parse(body) as ChampsResponse;
 
-                if (champResponse === undefined) {
-                    reject("No Champions found");
+                if (champResponse.champions === undefined) {
                     logger.error("No Champions found");
                     logger.error(body);
+                    resolve();
                     return;
                 }
 

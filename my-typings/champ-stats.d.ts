@@ -29,8 +29,8 @@ declare interface AggregatedChampStats {
 }
 
 declare interface ChampSummary {
-    favorite: AggregatedChampStats[];
-    summary: AggregatedChampStats;
+    favorite?: AggregatedChampStats[];
+    summary?: AggregatedChampStats;
 }
 
 declare interface ChampsResponse {
