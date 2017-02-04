@@ -15,7 +15,7 @@ export class StatsFetcher {
                 json: true,
             }, (error, response, statsResponse: StatsResponse) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
-                    reject(statsResponse.toString());
+                    reject(statsResponse);
                     logger.error(error);
                     return;
                 }

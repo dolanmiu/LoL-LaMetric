@@ -6,6 +6,7 @@ import { ChampionFetcher } from "./champion-fetcher";
 import { LaMetricFormatter } from "./lametric-formatter";
 import { RecentGamesFetcher } from "./recent-games-fetcher";
 import { StatsFetcher } from "./stats-fetcher";
+import { SummonerFetcher } from "./summoner-fetcher";
 
 export class StatsRouter {
     public router: Router;
@@ -14,6 +15,7 @@ export class StatsRouter {
     private recentGamesFetcher: RecentGamesFetcher;
     private championFetcher: ChampionFetcher;
     private statsFetcher: StatsFetcher;
+    private summonerFetcher: SummonerFetcher;
 
     constructor(private apiKey: string) {
         this.router = Router();
@@ -23,6 +25,7 @@ export class StatsRouter {
         this.recentGamesFetcher = new RecentGamesFetcher(apiKey);
         this.championFetcher = new ChampionFetcher(apiKey, this.champDictionary.fetch());
         this.statsFetcher = new StatsFetcher(apiKey);
+        this.summonerFetcher = new SummonerFetcher(apiKey);
     }
 
     public init(): void {
@@ -35,24 +38,7 @@ export class StatsRouter {
                 return;
             }
 
-            request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, {
-                json: true,
-            }, (error, response, body: { [name: string]: Summoner }) => {
-                if (response === undefined || (error && response.statusCode !== 200)) {
-                    res.status(500).send(error);
-                    logger.error(error);
-                    return;
-                }
-
-                const summoner = body[name.replace(/\s/g, "").toLowerCase()];
-
-                if (summoner === undefined) {
-                    res.status(500).send("No summoner found");
-                    logger.error("No summoner found");
-                    logger.error(body.toString());
-                    return;
-                }
-
+            this.summonerFetcher.getStats(name, region).then((summoner) => {
                 const statsPromise = this.statsFetcher.getStats(summoner.id, region);
                 const champsPromise = this.championFetcher.getChamps(summoner.id, region);
                 const previousChampsPromise = this.championFetcher.getChampsPreviousSeason(summoner.id, region);
@@ -66,6 +52,10 @@ export class StatsRouter {
                     res.status(500).json({
                         text: "Something went wrong with the server",
                     });
+                });
+            }).catch((reason) => {
+                res.status(500).json({
+                    text: `Cannot find ${name} in ${region}, or the server is down.`,
                 });
             });
         });
