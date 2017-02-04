@@ -1,3 +1,4 @@
+import { ChampDictionary } from "../../league/champ-dictionary";
 import { Utility } from "../../utility";
 
 interface ILaMetricOutput {
@@ -12,11 +13,16 @@ interface ILaMetricFrame {
 const LOGO_ICON_STRING = "i7386";
 
 export class LaMetricFormatter {
-    public format(data: [AggregatedStats, ChampSummary, ChampSummary]): ILaMetricOutput {
+
+    constructor(private champPromise: Promise<IChampTable>) {
+    }
+
+    public format(data: [AggregatedStats, ChampSummary, ChampSummary, Game]): Promise<ILaMetricOutput> {
         const frames: ILaMetricFrame[] = [];
         const aggregatedStats = data[0];
         const champStats = data[1];
         const previousChampStats = data[2];
+        const lastGame = data[3];
         const currentYear = Utility.currentRankedYear;
 
         frames.push({
@@ -97,9 +103,58 @@ export class LaMetricFormatter {
             });
         }
 
-        return {
-            frames,
-        };
+        frames.push({
+            text: `Last Game Kills: ${lastGame.stats.championsKilled}`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game Assists: ${lastGame.stats.assists}`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game Deaths: ${lastGame.stats.numDeaths}`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game you dealt ${lastGame.stats.totalDamageDealt} damage`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game you taken ${lastGame.stats.totalDamageTaken} damage`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game killing spree: ${lastGame.stats.killingSprees === undefined ? 0 : lastGame.stats.killingSprees}`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game IP Earned: ${lastGame.ipEarned}`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `You ${lastGame.stats.win ? "won" : "lost"} your last game`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        return new Promise<ILaMetricOutput>((resolve) => {
+            this.champPromise.then((champTable) => {
+                frames.push({
+                    text: `Last Game you played as ${champTable[lastGame.championId].name}`,
+                    icon: LOGO_ICON_STRING,
+                });
+
+                resolve({
+                    frames,
+                });
+            });
+        });
     }
 
     private getRatio(firstNumber: number, secondNumber: number): string {

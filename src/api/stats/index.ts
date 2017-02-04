@@ -21,8 +21,8 @@ export class StatsRouter {
         this.init();
         this.statsTransformer = new StatsTransformer();
         this.champDictionary = new ChampDictionary(apiKey);
+        this.laMetricFormatter = new LaMetricFormatter(this.champDictionary.fetch());
         this.champTransformer = new ChampsTransformer(this.champDictionary.fetch());
-        this.laMetricFormatter = new LaMetricFormatter();
         this.recentGamesFetcher = new RecentGamesFetcher(apiKey);
     }
 
@@ -55,11 +55,12 @@ export class StatsRouter {
                 const statsPromise = this.getStats(summoner.id, region);
                 const champsPromise = this.getChamps(summoner.id, region);
                 const previousChampsPromise = this.getChampsPreviousSeason(summoner.id, region);
-                this.recentGamesFetcher.fetchLast(summoner.id, region);
+                const lastGamePromise = this.recentGamesFetcher.fetchLast(summoner.id, region);
 
-                Promise.all([statsPromise, champsPromise, previousChampsPromise]).then((stats) => {
-                    const laMetricOutput = this.laMetricFormatter.format(stats);
-                    res.status(200).json(laMetricOutput);
+                Promise.all([statsPromise, champsPromise, previousChampsPromise, lastGamePromise]).then((stats) => {
+                    this.laMetricFormatter.format(stats).then((laMetricOutput) => {
+                        res.status(200).json(laMetricOutput);
+                    });
                 }).catch(() => {
                     res.status(500).json({
                         text: "Something went wrong with the server",

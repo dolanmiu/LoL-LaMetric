@@ -3,7 +3,7 @@ import * as logger from "winston";
 
 export class ChampDictionary {
 
-    private promise: Promise<{ [index: string]: Champion; }>;
+    private promise: Promise<IChampTable>;
 
     constructor(private apiKey: string) {
         setInterval(() => {
@@ -11,7 +11,7 @@ export class ChampDictionary {
         }, 86400000);
     }
 
-    public fetch(): Promise<{ [index: string]: Champion; }> {
+    public fetch(): Promise<IChampTable> {
         if (this.promise !== undefined) {
             return this.promise;
         }
@@ -20,12 +20,12 @@ export class ChampDictionary {
         return this.promise;
     }
 
-    public get Promise(): Promise<{ [index: string]: Champion; }> {
+    public get Promise(): Promise<IChampTable> {
         return this.promise;
     }
 
-    private createPromise(): Promise<{ [index: string]: Champion; }> {
-        return new Promise<{ [index: string]: Champion; }>((resolve, reject) => {
+    private createPromise(): Promise<IChampTable> {
+        return new Promise<IChampTable>((resolve, reject) => {
             request.get(`https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion?api_key=${this.apiKey}`, (error, response, body) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(error);

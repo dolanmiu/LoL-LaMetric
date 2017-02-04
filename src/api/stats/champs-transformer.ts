@@ -1,6 +1,6 @@
 export class ChampsTransformer {
 
-    constructor(private champPromise: Promise<{ [index: string]: Champion; }>) {
+    constructor(private champPromise: Promise<IChampTable>) {
 
     }
 

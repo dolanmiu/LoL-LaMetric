@@ -12,3 +12,7 @@ declare interface ChampionResponse {
     type: "champion",
     version: "7.1.1"
 }
+
+declare interface IChampTable {
+    [index: string]: Champion;
+}

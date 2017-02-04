@@ -1,3 +1,4 @@
+/* tslint:disable */
 import { Utility } from "../../utility";
 
 interface ILaMetricOutput {

@@ -18,6 +18,7 @@ export class StatusRouter {
 
     public init(): void {
         this.router.get("/", (req: Request, res: Response) => {
+            // todo
         });
     }
 }
