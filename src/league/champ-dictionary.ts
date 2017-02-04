@@ -26,14 +26,15 @@ export class ChampDictionary {
 
     private createPromise(): Promise<IChampTable> {
         return new Promise<IChampTable>((resolve, reject) => {
-            request.get(`https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion?api_key=${this.apiKey}`, (error, response, body) => {
+            request.get(`https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion?api_key=${this.apiKey}`, {
+                json: true,
+            }, (error, response, champResponse: ChampionResponse) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(error);
-                    logger.error(error);
+                    logger.error(champResponse.toString());
                     return;
                 }
 
-                const champResponse = JSON.parse(body) as ChampionResponse;
                 const idDictionary = this.mapChampsToId(champResponse.data);
                 resolve(idDictionary);
             });

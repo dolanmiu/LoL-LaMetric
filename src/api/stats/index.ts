@@ -2,28 +2,27 @@ import { Request, Response, Router } from "express";
 import * as request from "request";
 import * as logger from "winston";
 import { ChampDictionary } from "../../league/champ-dictionary";
-import { Utility } from "../../utility";
-import { ChampsTransformer } from "./champs-transformer";
+import { ChampionFetcher } from "./champion-fetcher";
 import { LaMetricFormatter } from "./lametric-formatter";
 import { RecentGamesFetcher } from "./recent-games-fetcher";
-import { StatsTransformer } from "./stats-transformer";
+import { StatsFetcher } from "./stats-fetcher";
 
 export class StatsRouter {
     public router: Router;
-    private statsTransformer: StatsTransformer;
-    private champTransformer: ChampsTransformer;
     private champDictionary: ChampDictionary;
     private laMetricFormatter: LaMetricFormatter;
     private recentGamesFetcher: RecentGamesFetcher;
+    private championFetcher: ChampionFetcher;
+    private statsFetcher: StatsFetcher;
 
     constructor(private apiKey: string) {
         this.router = Router();
         this.init();
-        this.statsTransformer = new StatsTransformer();
         this.champDictionary = new ChampDictionary(apiKey);
         this.laMetricFormatter = new LaMetricFormatter(this.champDictionary.fetch());
-        this.champTransformer = new ChampsTransformer(this.champDictionary.fetch());
         this.recentGamesFetcher = new RecentGamesFetcher(apiKey);
+        this.championFetcher = new ChampionFetcher(apiKey, this.champDictionary.fetch());
+        this.statsFetcher = new StatsFetcher(apiKey);
     }
 
     public init(): void {
@@ -52,9 +51,9 @@ export class StatsRouter {
                     return;
                 }
 
-                const statsPromise = this.getStats(summoner.id, region);
-                const champsPromise = this.getChamps(summoner.id, region);
-                const previousChampsPromise = this.getChampsPreviousSeason(summoner.id, region);
+                const statsPromise = this.statsFetcher.getStats(summoner.id, region);
+                const champsPromise = this.championFetcher.getChamps(summoner.id, region);
+                const previousChampsPromise = this.championFetcher.getChampsPreviousSeason(summoner.id, region);
                 const lastGamePromise = this.recentGamesFetcher.fetchLast(summoner.id, region);
 
                 Promise.all([statsPromise, champsPromise, previousChampsPromise, lastGamePromise]).then((stats) => {
@@ -65,56 +64,6 @@ export class StatsRouter {
                     res.status(500).json({
                         text: "Something went wrong with the server",
                     });
-                });
-            });
-        });
-    }
-
-    private getStats(summonerId: number, region: string): Promise<AggregatedStats> {
-        return new Promise<AggregatedStats>((resolve, reject) => {
-            request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/summary?&api_key=${this.apiKey}`, (error, response, body) => {
-                if (response === undefined || (error && response.statusCode !== 200)) {
-                    reject(error);
-                    logger.error(error);
-                    return;
-                }
-
-                const statsResponse = JSON.parse(body) as StatsResponse;
-
-                const stats = this.statsTransformer.transform(statsResponse);
-                resolve(stats);
-            });
-        });
-    }
-
-    private getChamps(summonerId: number, region: string): Promise<ChampSummary> {
-        return this.getChampsGeneric(`https://${region}.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/ranked?api_key=${this.apiKey}`);
-    }
-
-    private getChampsPreviousSeason(summonerId: number, region: string): Promise<ChampSummary> {
-        return this.getChampsGeneric(`https://${region}.api.pvp.net/api/lol/${region}/v1.3/stats/by-summoner/${summonerId}/ranked?season=SEASON${Utility.currentRankedYear - 1}&api_key=${this.apiKey}`);
-    }
-
-    private getChampsGeneric(url: string): Promise<ChampSummary> {
-        return new Promise<ChampSummary>((resolve, reject) => {
-            request.get(url, (error, response, body) => {
-                if (response === undefined || (error && response.statusCode !== 200)) {
-                    reject(error);
-                    logger.error(error);
-                    return;
-                }
-
-                const champResponse = JSON.parse(body) as ChampsResponse;
-
-                if (champResponse.champions === undefined) {
-                    logger.error("No Champions found");
-                    logger.error(body);
-                    resolve();
-                    return;
-                }
-
-                const champs = this.champTransformer.transform(champResponse.champions, (stats) => {
-                    resolve(stats);
                 });
             });
         });

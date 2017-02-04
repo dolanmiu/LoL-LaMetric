@@ -13,9 +13,8 @@ interface ILaMetricFrame {
 const LOGO_ICON_STRING = "i7386";
 
 export class LaMetricFormatter {
-    public format(data: [any]): ILaMetricOutput {
+    public format(data: any): ILaMetricOutput {
         const frames: ILaMetricFrame[] = [];
-        const aggregatedStats = data[0];
 
         frames.push({
             text: ``,

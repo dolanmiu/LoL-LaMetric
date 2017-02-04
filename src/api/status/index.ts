@@ -18,7 +18,19 @@ export class StatusRouter {
 
     public init(): void {
         this.router.get("/", (req: Request, res: Response) => {
-            // todo
+            const region: string = req.query.region;
+
+            if (region === undefined) {
+                res.status(400).send("name and region cannot be empty");
+                return;
+            }
+
+            const statusPromise = this.statusFetcher.fetch(region);
+
+            statusPromise.then((status) => {
+                // const laMetricFrames = this.laMetricFormatter.format(status);
+                res.status(200).send(status);
+            });
         });
     }
 }
