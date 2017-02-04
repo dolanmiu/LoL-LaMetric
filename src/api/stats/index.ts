@@ -2,11 +2,11 @@ import { Request, Response, Router } from "express";
 import * as request from "request";
 import * as logger from "winston";
 import { ChampDictionary } from "../../league/champ-dictionary";
-import { ChampsTransformer } from "../../league/champs-transformer";
-import { StatsTransformer } from "../../league/stats-transformer";
 import { Utility } from "../../utility";
+import { ChampsTransformer } from "./champs-transformer";
 import { LaMetricFormatter } from "./lametric-formatter";
 import { RecentGamesFetcher } from "./recent-games-fetcher";
+import { StatsTransformer } from "./stats-transformer";
 
 export class StatsRouter {
     public router: Router;
