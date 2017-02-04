@@ -13,13 +13,15 @@ interface ILaMetricFrame {
 const LOGO_ICON_STRING = "i7386";
 
 export class LaMetricFormatter {
-    public format(data: any): ILaMetricOutput {
+    public format(serverStatus: ServerStatus): ILaMetricOutput {
         const frames: ILaMetricFrame[] = [];
 
-        frames.push({
-            text: ``,
-            icon: LOGO_ICON_STRING,
-        });
+        for (const service of serverStatus.services) {
+            frames.push({
+                text: `${service.name} status: ${service.status}`,
+                icon: LOGO_ICON_STRING,
+            });
+        }
 
         return {
             frames,

@@ -28,8 +28,8 @@ export class StatusRouter {
             const statusPromise = this.statusFetcher.fetch(region);
 
             statusPromise.then((status) => {
-                // const laMetricFrames = this.laMetricFormatter.format(status);
-                res.status(200).send(status);
+                const laMetricFrames = this.laMetricFormatter.format(status);
+                res.status(200).send(laMetricFrames);
             });
         });
     }
