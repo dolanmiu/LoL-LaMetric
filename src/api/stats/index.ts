@@ -35,19 +35,21 @@ export class StatsRouter {
                 return;
             }
 
-            request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, (error, response, body) => {
+            request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, {
+                json: true,
+            }, (error, response, body: { [name: string]: Summoner }) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
                     res.status(500).send(error);
                     logger.error(error);
                     return;
                 }
 
-                const summoner = JSON.parse(body)[name.replace(/\s/g, "").toLowerCase()] as Summoner;
+                const summoner = body[name.replace(/\s/g, "").toLowerCase()];
 
                 if (summoner === undefined) {
                     res.status(500).send("No summoner found");
                     logger.error("No summoner found");
-                    logger.error(body);
+                    logger.error(body.toString());
                     return;
                 }
 
