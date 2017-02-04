@@ -6,12 +6,15 @@ import { ChampsTransformer } from "../../league/champs-transformer";
 import { StatsTransformer } from "../../league/stats-transformer";
 import { Utility } from "../../utility";
 import { LaMetricFormatter } from "./lametric-formatter";
+import { RecentGamesFetcher } from "./recent-games-fetcher";
+
 export class StatsRouter {
     public router: Router;
     private statsTransformer: StatsTransformer;
     private champTransformer: ChampsTransformer;
     private champDictionary: ChampDictionary;
     private laMetricFormatter: LaMetricFormatter;
+    private recentGamesFetcher: RecentGamesFetcher;
 
     constructor(private apiKey: string) {
         this.router = Router();
@@ -20,6 +23,7 @@ export class StatsRouter {
         this.champDictionary = new ChampDictionary(apiKey);
         this.champTransformer = new ChampsTransformer(this.champDictionary.fetch());
         this.laMetricFormatter = new LaMetricFormatter();
+        this.recentGamesFetcher = new RecentGamesFetcher(apiKey);
     }
 
     public init(): void {
@@ -51,6 +55,7 @@ export class StatsRouter {
                 const statsPromise = this.getStats(summoner.id, region);
                 const champsPromise = this.getChamps(summoner.id, region);
                 const previousChampsPromise = this.getChampsPreviousSeason(summoner.id, region);
+                this.recentGamesFetcher.fetchLast(summoner.id, region);
 
                 Promise.all([statsPromise, champsPromise, previousChampsPromise]).then((stats) => {
                     const laMetricOutput = this.laMetricFormatter.format(stats);
