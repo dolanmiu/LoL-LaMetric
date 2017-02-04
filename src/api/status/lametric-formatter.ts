@@ -10,7 +10,8 @@ interface ILaMetricFrame {
     icon: string;
 }
 
-const LOGO_ICON_STRING = "i7386";
+const LOGO_ICON_STRING_GOOD = "i7881";
+const LOGO_ICON_STRING_BAD = "i7882";
 
 export class LaMetricFormatter {
     public format(serverStatus: ServerStatus): ILaMetricOutput {
@@ -19,7 +20,7 @@ export class LaMetricFormatter {
         for (const service of serverStatus.services) {
             frames.push({
                 text: `${service.name} status: ${service.status}`,
-                icon: LOGO_ICON_STRING,
+                icon: service.status === "online" ? LOGO_ICON_STRING_GOOD : LOGO_ICON_STRING_BAD,
             });
         }
 
