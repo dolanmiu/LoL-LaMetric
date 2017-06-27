@@ -9,27 +9,26 @@ export class SummonerFetcher {
         this.statsTransformer = new StatsTransformer();
     }
 
-    public getStats(name: string, region: string): Promise<Summoner> {
+    public getStats(name: string, region: Region): Promise<Summoner> {
         return new Promise<Summoner>((resolve, reject) => {
-            request.get(`https://${region}.api.pvp.net/api/lol/${region}/v1.4/summoner/by-name/${name}?api_key=${this.apiKey}`, {
+            const url = `https://${region}.api.riotgames.com/lol/summoner/v3/summoners/by-name/${name}?api_key=${this.apiKey}`;
+            request.get(url, {
                 json: true,
-            }, (error, response, body: { [name: string]: Summoner }) => {
+            }, (error, response, body: Summoner) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(body);
                     logger.error(error);
                     return;
                 }
 
-                const summoner = body[name.replace(/\s/g, "").toLowerCase()];
-
-                if (summoner === undefined) {
+                if (body === undefined) {
                     reject("No summoner found");
                     logger.error("No summoner found");
                     logger.error(body.toString());
                     return;
                 }
 
-                resolve(summoner);
+                resolve(body);
             });
         });
     }
