@@ -5,7 +5,6 @@ import { ChampDictionary } from "../../league/champ-dictionary";
 import { ChampionFetcher } from "./champion-fetcher";
 import { LaMetricFormatter } from "./lametric-formatter";
 import { RecentGamesFetcher } from "./recent-games-fetcher";
-import { StatsFetcher } from "./stats-fetcher";
 import { SummonerFetcher } from "./summoner-fetcher";
 
 export class StatsRouter {
@@ -14,7 +13,6 @@ export class StatsRouter {
     private laMetricFormatter: LaMetricFormatter;
     private recentGamesFetcher: RecentGamesFetcher;
     private championFetcher: ChampionFetcher;
-    private statsFetcher: StatsFetcher;
     private summonerFetcher: SummonerFetcher;
 
     constructor(private apiKey: string) {
@@ -24,7 +22,6 @@ export class StatsRouter {
         this.laMetricFormatter = new LaMetricFormatter(this.champDictionary.fetch());
         this.recentGamesFetcher = new RecentGamesFetcher(apiKey);
         this.championFetcher = new ChampionFetcher(apiKey, this.champDictionary.fetch());
-        this.statsFetcher = new StatsFetcher(apiKey);
         this.summonerFetcher = new SummonerFetcher(apiKey);
     }
 
@@ -39,12 +36,10 @@ export class StatsRouter {
             }
 
             this.summonerFetcher.getStats(name, region).then((summoner) => {
-                const statsPromise = this.statsFetcher.getStats(summoner.id, region);
                 const champsPromise = this.championFetcher.getChamps(summoner.id, region);
                 const previousChampsPromise = this.championFetcher.getChampsPreviousSeason(summoner.id, region);
                 const lastGamePromise = this.recentGamesFetcher.fetchLast(summoner.id, region);
 
-                Promise.all([statsPromise, champsPromise, previousChampsPromise, lastGamePromise]).then((stats) => {
                     this.laMetricFormatter.format(stats).then((laMetricOutput) => {
                         res.status(200).json(laMetricOutput);
                     });

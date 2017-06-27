@@ -17,38 +17,12 @@ export class LaMetricFormatter {
     constructor(private champPromise: Promise<IChampTable>) {
     }
 
-    public format(data: [AggregatedStats, ChampSummary, ChampSummary, Game]): Promise<ILaMetricOutput> {
+    public format(data: [ChampSummary, ChampSummary, Game]): Promise<ILaMetricOutput> {
         const frames: ILaMetricFrame[] = [];
-        const aggregatedStats = data[0];
         const champStats = data[1];
         const previousChampStats = data[2];
         const lastGame = data[3];
         const currentYear = Utility.currentRankedYear;
-
-        frames.push({
-            text: `Total Assists: ${aggregatedStats.totalAssists}`,
-            icon: LOGO_ICON_STRING,
-        });
-
-        frames.push({
-            text: `Total Champion Kills: ${aggregatedStats.totalChampionKills}`,
-            icon: LOGO_ICON_STRING,
-        });
-
-        frames.push({
-            text: `Total Minions Kills: ${aggregatedStats.totalMinionKills}`,
-            icon: LOGO_ICON_STRING,
-        });
-
-        frames.push({
-            text: `Total Jungle Mobs Kills: ${aggregatedStats.totalNeutralMinionsKilled}`,
-            icon: LOGO_ICON_STRING,
-        });
-
-        frames.push({
-            text: `Total Turret Takedowns: ${aggregatedStats.totalTurretsKilled}`,
-            icon: LOGO_ICON_STRING,
-        });
 
         if (champStats !== undefined) {
             frames.push({

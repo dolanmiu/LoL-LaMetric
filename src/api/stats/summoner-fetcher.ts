@@ -1,12 +1,9 @@
 import * as request from "request";
 import * as logger from "winston";
-import { StatsTransformer } from "./stats-transformer";
 
 export class SummonerFetcher {
-    private statsTransformer: StatsTransformer;
 
     constructor(private apiKey: string) {
-        this.statsTransformer = new StatsTransformer();
     }
 
     public getStats(name: string, region: Region): Promise<Summoner> {
