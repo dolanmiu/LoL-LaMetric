@@ -1,7 +1,3 @@
-declare enum Team {
-    Blue = 200, Red = 200
-}
-
 declare interface Game {
     fellowPlayers: [{
         championId: number,
