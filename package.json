@@ -1,7 +1,7 @@
 {
   "name": "lol-lametric",
   "version": "1.0.0",
-  "description": "Leage of Legends LaMetric app",
+  "description": "League of Legends LaMetric app",
   "main": "dist/index.js",
   "scripts": {
     "pretest": "tsc --p .",
