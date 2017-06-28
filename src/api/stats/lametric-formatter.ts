@@ -17,68 +17,13 @@ export class LaMetricFormatter {
     constructor(private champPromise: Promise<IChampTable>) {
     }
 
-    public format(data: [ChampSummary, ChampSummary, Game]): Promise<ILaMetricOutput> {
+    public format(data: MatchParticipant[]): Promise<ILaMetricOutput> {
         const frames: ILaMetricFrame[] = [];
-        const champStats = data[1];
-        const previousChampStats = data[2];
-        const lastGame = data[3];
+        const lastGame = data[0];
         const currentYear = Utility.currentRankedYear;
 
-        if (champStats !== undefined) {
-            frames.push({
-                text: `Games Played in Ranked ${currentYear}: ${champStats.summary.stats.totalSessionsPlayed}`,
-                icon: LOGO_ICON_STRING,
-            });
-        }
-
-        if (champStats !== undefined) {
-            frames.push({
-                text: `W/L Ratio in Ranked ${currentYear}: ${this.getRatio(champStats.summary.stats.totalSessionsWon, champStats.summary.stats.totalSessionsLost)}`,
-                icon: LOGO_ICON_STRING,
-            });
-        }
-
-        if (champStats !== undefined) {
-            frames.push({
-                text: `Double Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalDoubleKills}`,
-                icon: LOGO_ICON_STRING,
-            });
-        }
-
-        if (champStats !== undefined) {
-            frames.push({
-                text: `Triple Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalTripleKills}`,
-                icon: LOGO_ICON_STRING,
-            });
-        }
-
-        if (champStats !== undefined) {
-            frames.push({
-                text: `Quadra Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalQuadraKills}`,
-                icon: LOGO_ICON_STRING,
-            });
-        }
-
-        if (champStats !== undefined) {
-            frames.push({
-                text: `Penta Kills in Ranked ${currentYear}: ${champStats.summary.stats.totalPentaKills}`,
-                icon: LOGO_ICON_STRING,
-            });
-        }
-
-        if (champStats !== undefined && previousChampStats !== undefined) {
-            frames.push(this.calculateHowManyExtraGamesWon(champStats.summary, previousChampStats.summary));
-        }
-
-        if (champStats === undefined) {
-            frames.push({
-                text: `For more stats, play some games in ranked`,
-                icon: LOGO_ICON_STRING,
-            });
-        }
-
         frames.push({
-            text: `Last Game Kills: ${lastGame.stats.championsKilled}`,
+            text: `Last Game Kills: ${lastGame.stats.kills}`,
             icon: LOGO_ICON_STRING,
         });
 
@@ -88,7 +33,7 @@ export class LaMetricFormatter {
         });
 
         frames.push({
-            text: `Last Game Deaths: ${lastGame.stats.numDeaths}`,
+            text: `Last Game Deaths: ${lastGame.stats.deaths}`,
             icon: LOGO_ICON_STRING,
         });
 
@@ -104,11 +49,6 @@ export class LaMetricFormatter {
 
         frames.push({
             text: `Last Game killing spree: ${lastGame.stats.killingSprees === undefined ? 0 : lastGame.stats.killingSprees}`,
-            icon: LOGO_ICON_STRING,
-        });
-
-        frames.push({
-            text: `Last Game IP Earned: ${lastGame.ipEarned}`,
             icon: LOGO_ICON_STRING,
         });
 
