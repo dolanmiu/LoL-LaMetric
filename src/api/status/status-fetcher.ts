@@ -11,10 +11,16 @@ export class StatusFetcher {
             const url = `https://${region}.api.riotgames.com/lol/status/v3/shard-data?api_key=${this.apiKey}`;
             request(url, {
                 json: true,
-            }, (error, response, body: ServerStatus) => {
+            }, (error, response, body: ServerStatus & RiotError) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(error);
                     logger.error(error);
+                    return;
+                }
+
+                if (body.status !== undefined) {
+                    reject(body);
+                    logger.error(JSON.stringify(body.status.message));
                     return;
                 }
 

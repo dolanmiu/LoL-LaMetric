@@ -11,10 +11,16 @@ export class RecentGamesFetcher {
             const url = `https://${region}.api.riotgames.com/lol/match/v3/matchlists/by-account/${accountId}/recent?api_key=${this.apiKey}`;
             request(url, {
                 json: true,
-            }, (error, response, body: MatchListResponse) => {
+            }, (error, response, body: MatchListResponse & RiotError) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(error);
                     logger.error(error);
+                    return;
+                }
+
+                if (body.status !== undefined) {
+                    reject(body);
+                    logger.error(JSON.stringify(body.status.message));
                     return;
                 }
 

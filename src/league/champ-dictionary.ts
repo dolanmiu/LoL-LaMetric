@@ -29,14 +29,20 @@ export class ChampDictionary {
             const url = `https://euw1.api.riotgames.com/lol/static-data/v3/champions?api_key=${this.apiKey}`;
             request.get(url, {
                 json: true,
-            }, (error, response, champResponse: ChampionResponse) => {
+            }, (error, response, body: ChampionResponse & RiotError) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(error);
-                    logger.error(champResponse.toString());
+                    logger.error(body.toString());
                     return;
                 }
 
-                const idDictionary = this.mapChampsToId(champResponse.data);
+                if (body.status !== undefined) {
+                    reject(body);
+                    logger.error(JSON.stringify(body.status.message));
+                    return;
+                }
+
+                const idDictionary = this.mapChampsToId(body.data);
                 resolve(idDictionary);
             });
         });

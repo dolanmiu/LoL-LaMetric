@@ -22,7 +22,11 @@ export class StatusRouter {
             const regionString: string = req.query.region;
 
             if (regionString === undefined) {
-                res.status(400).send("name and region cannot be empty");
+                res.status(400).send({
+                    frames: [{
+                        text: "region cannot be empty",
+                    }],
+                } as ILaMetricOutput);
                 return;
             }
 
@@ -30,7 +34,11 @@ export class StatusRouter {
             try {
                 region = RegionConverter.convert(regionString);
             } catch (e) {
-                res.status(400).send(`Unknown region ${regionString}`);
+                res.status(400).send({
+                    frames: [{
+                        text: `Unknown region ${regionString}`,
+                    }],
+                } as ILaMetricOutput);
                 return;
             }
 

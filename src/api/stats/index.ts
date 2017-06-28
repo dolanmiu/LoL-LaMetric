@@ -29,7 +29,11 @@ export class StatsRouter {
             const regionString: string = req.query.region;
 
             if (name === undefined || regionString === undefined) {
-                res.status(400).send("name and region cannot be empty");
+                res.status(400).send({
+                    frames: [{
+                        text: "name and region cannot be empty",
+                    }],
+                } as ILaMetricOutput);
                 return;
             }
 
@@ -37,11 +41,15 @@ export class StatsRouter {
             try {
                 region = RegionConverter.convert(regionString);
             } catch (e) {
-                res.status(400).send(`Unknown region ${regionString}`);
+                res.status(400).send({
+                    frames: [{
+                        text: `Unknown region ${regionString}`,
+                    }],
+                } as ILaMetricOutput);
                 return;
             }
 
-            this.summonerFetcher.getStats(name, region).then((summoner) => {
+            this.summonerFetcher.fetchSummoner(name, region).then((summoner) => {
                 const lastGamePromise = this.recentGamesFetcher.fetchLast(summoner.accountId, region);
 
                 Promise.all([lastGamePromise]).then((stats) => {
@@ -50,13 +58,17 @@ export class StatsRouter {
                     });
                 }).catch(() => {
                     res.status(500).json({
-                        text: "Something went wrong with the server",
-                    });
+                        frames: [{
+                            text: "Something went wrong with the server",
+                        }],
+                    } as ILaMetricOutput);
                 });
             }).catch((reason) => {
                 res.status(500).json({
-                    text: `Cannot find ${name} in ${region}, or the server is down.`,
-                });
+                    frames: [{
+                        text: `Cannot find ${name} in ${region}, or the server is down.`,
+                    }],
+                } as ILaMetricOutput);
             });
         });
     }
