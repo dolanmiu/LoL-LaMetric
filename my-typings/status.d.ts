@@ -15,7 +15,7 @@ declare interface Incident {
 }
 
 declare interface ServerStatus {
-    region_tag: "eu",
+    region_tag: string,
     services: [{
         incidents: Incident[],
         status: string,

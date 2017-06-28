@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import * as request from "request";
 import * as logger from "winston";
+import { RegionConverter } from "../region-converter";
 import { LaMetricFormatter } from "./lametric-formatter";
 import { StatusFetcher } from "./status-fetcher";
 
@@ -18,12 +19,14 @@ export class StatusRouter {
 
     public init(): void {
         this.router.get("/", (req: Request, res: Response) => {
-            const region: string = req.query.region;
+            const regionString: string = req.query.region;
 
-            if (region === undefined) {
+            if (regionString === undefined) {
                 res.status(400).send("name and region cannot be empty");
                 return;
             }
+
+            const region = RegionConverter.convert(regionString);
 
             const statusPromise = this.statusFetcher.fetch(region);
 
