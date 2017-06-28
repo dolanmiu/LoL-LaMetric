@@ -181,7 +181,7 @@ declare interface MatchResponse {
     participantIdentities: [
         {
             participantId: number,
-            player: {
+            player?: {
                 platformId: Region,
                 accountId: number,
                 summonerName: string,
