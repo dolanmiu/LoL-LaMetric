@@ -33,7 +33,13 @@ export class StatsRouter {
                 return;
             }
 
-            const region = RegionConverter.convert(regionString);
+            let region;
+            try {
+                region = RegionConverter.convert(regionString);
+            } catch (e) {
+                res.status(400).send(`Unknown region ${regionString}`);
+                return;
+            }
 
             this.summonerFetcher.getStats(name, region).then((summoner) => {
                 const lastGamePromise = this.recentGamesFetcher.fetchLast(summoner.accountId, region);

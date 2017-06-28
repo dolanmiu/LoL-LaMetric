@@ -26,7 +26,13 @@ export class StatusRouter {
                 return;
             }
 
-            const region = RegionConverter.convert(regionString);
+            let region;
+            try {
+                region = RegionConverter.convert(regionString);
+            } catch (e) {
+                res.status(400).send(`Unknown region ${regionString}`);
+                return;
+            }
 
             const statusPromise = this.statusFetcher.fetch(region);
 
