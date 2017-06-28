@@ -26,7 +26,8 @@ export class ChampDictionary {
 
     private createPromise(): Promise<IChampTable> {
         return new Promise<IChampTable>((resolve, reject) => {
-            request.get(`https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion?api_key=${this.apiKey}`, {
+            const url = `https://euw1.api.riotgames.com/lol/static-data/v3/champions?api_key=${this.apiKey}`;
+            request.get(url, {
                 json: true,
             }, (error, response, champResponse: ChampionResponse) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
