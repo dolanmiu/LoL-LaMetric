@@ -48,6 +48,31 @@ export class LaMetricFormatter {
         });
 
         frames.push({
+            text: `Last Game you placed ${lastGame.stats.wardsPlaced} wards`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game you destroyed ${lastGame.stats.wardsKilled} wards`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game you earned ${lastGame.stats.goldEarned} gold`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game you healed ${lastGame.stats.totalHeal} HP`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
+            text: `Last Game Largest Killing Spree: ${lastGame.stats.largestKillingSpree}`,
+            icon: LOGO_ICON_STRING,
+        });
+
+        frames.push({
             text: `Last Game killing spree: ${lastGame.stats.killingSprees === undefined ? 0 : lastGame.stats.killingSprees}`,
             icon: LOGO_ICON_STRING,
         });
