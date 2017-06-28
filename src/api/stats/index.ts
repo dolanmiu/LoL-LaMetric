@@ -56,7 +56,16 @@ export class StatsRouter {
                     this.laMetricFormatter.format(stats).then((laMetricOutput) => {
                         res.status(200).json(laMetricOutput);
                     });
-                }).catch(() => {
+                }).catch((reason) => {
+                    console.log(reason);
+                    if (reason === "Private game") {
+                        res.status(500).json({
+                            frames: [{
+                                text: "Sorry! Due to a new LoL update, the last game needs to be a Ranked Game for it to show stats!",
+                            }],
+                        } as ILaMetricOutput);
+                        return;
+                    }
                     res.status(500).json({
                         frames: [{
                             text: "Something went wrong with the server",

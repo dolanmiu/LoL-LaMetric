@@ -25,8 +25,9 @@ export class RecentGamesFetcher {
                 }
 
                 if (body.matches.length === 0) {
-                    reject(error);
-                    logger.error(error);
+                    const message = "No matches";
+                    reject(message);
+                    logger.error(message);
                     return;
                 }
 
@@ -42,12 +43,20 @@ export class RecentGamesFetcher {
     private fetchMatch(matchId: number, accountId: number, region: Region): Promise<MatchParticipant> {
         return new Promise<MatchParticipant>((resolve, reject) => {
             const url = `https://${region}.api.riotgames.com/lol/match/v3/matches/${matchId}?api_key=${this.apiKey}`;
+            console.log(url);
             request(url, {
                 json: true,
             }, (error, response, body: MatchResponse) => {
                 if (response === undefined || (error && response.statusCode !== 200)) {
                     reject(error);
                     logger.error(error);
+                    return;
+                }
+
+                if (body.participantIdentities[0].player === undefined) {
+                    const message = "Private game";
+                    reject(message);
+                    logger.error(message);
                     return;
                 }
 
