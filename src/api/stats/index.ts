@@ -57,7 +57,6 @@ export class StatsRouter {
                         res.status(200).json(laMetricOutput);
                     });
                 }).catch((reason) => {
-                    console.log(reason);
                     if (reason === "Private game") {
                         res.status(500).json({
                             frames: [{

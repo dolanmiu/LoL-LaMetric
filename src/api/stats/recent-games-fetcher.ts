@@ -43,7 +43,6 @@ export class RecentGamesFetcher {
     private fetchMatch(matchId: number, accountId: number, region: Region): Promise<MatchParticipant> {
         return new Promise<MatchParticipant>((resolve, reject) => {
             const url = `https://${region}.api.riotgames.com/lol/match/v3/matches/${matchId}?api_key=${this.apiKey}`;
-            console.log(url);
             request(url, {
                 json: true,
             }, (error, response, body: MatchResponse) => {
