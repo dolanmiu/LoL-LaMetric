@@ -9,8 +9,8 @@ declare interface ChampionResponse {
     data: {
         [index: string]: Champion;
     };
-    type: "champion",
-    version: "7.1.1"
+    type: string,
+    version: string;
 }
 
 declare interface IChampTable {
