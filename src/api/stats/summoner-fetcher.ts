@@ -8,7 +8,8 @@ export class SummonerFetcher {
 
     public fetchSummoner(name: string, region: Region): Promise<Summoner> {
         return new Promise<Summoner>((resolve, reject) => {
-            const url = `https://${region}.api.riotgames.com/lol/summoner/v3/summoners/by-name/${name}?api_key=${this.apiKey}`;
+            const newName = encodeURIComponent(name);
+            const url = `https://${region}.api.riotgames.com/lol/summoner/v3/summoners/by-name/${newName}?api_key=${this.apiKey}`;
             request.get(url, {
                 json: true,
             }, (error, response, body: Summoner & RiotError) => {
