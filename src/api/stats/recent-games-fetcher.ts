@@ -31,7 +31,7 @@ export class RecentGamesFetcher {
                     return;
                 }
 
-                this.fetchMatch(body.matches[0].gameId, accountId, region).then((participant) => {
+                this.fetchMatch(body.matches[0].gameId, accountId, body.matches[0].champion, region).then((participant) => {
                     resolve(participant);
                 }).catch((err) => {
                     reject(err);
@@ -40,7 +40,7 @@ export class RecentGamesFetcher {
         });
     }
 
-    private fetchMatch(matchId: number, accountId: number, region: Region): Promise<MatchParticipant> {
+    private fetchMatch(matchId: number, accountId: number, championId: number, region: Region): Promise<MatchParticipant> {
         return new Promise<MatchParticipant>((resolve, reject) => {
             const url = `https://${region}.api.riotgames.com/lol/match/v3/matches/${matchId}?api_key=${this.apiKey}`;
             request(url, {
@@ -52,19 +52,8 @@ export class RecentGamesFetcher {
                     return;
                 }
 
-                if (body.participantIdentities[0].player === undefined) {
-                    const message = "Private game";
-                    reject(message);
-                    logger.error(message);
-                    return;
-                }
-
-                const participantIdentity = body.participantIdentities.find((p, index) => {
-                    return p.player.accountId === accountId;
-                });
-
                 const participant = body.participants.find((p, index) => {
-                    return p.participantId === participantIdentity.participantId;
+                    return p.championId === championId;
                 });
 
                 resolve(participant);
