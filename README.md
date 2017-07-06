@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/dolanmiu/LoL-LaMetric.svg?branch=master)](https://travis-ci.org/dolanmiu/LoL-LaMetric)
 
-![19807459_10154803707946342_2138179540_o](https://user-images.githubusercontent.com/2917613/27892125-c32427c4-61f5-11e7-8a26-61881f0cc203.jpg)
+![image](https://user-images.githubusercontent.com/2917613/27892425-7957d7a6-61f7-11e7-8800-16694dabcdc2.png)
+
 
 # League of Legends Stats - LaMetric App
 
@@ -12,9 +13,13 @@
 [![Demo Video](http://img.youtube.com/vi/DW58gpeTgH4/0.jpg)](http://www.youtube.com/watch?v=DW58gpeTgH4)
 
 ## Usage
-Go to the LaMetric app store on the LaMetric App, and search for this App, and download.
+Go to the LaMetric app store on the LaMetric App, and search for this App, and download:
+http://apps.lametric.com/apps/league_of_legends_stats/2698
+http://apps.lametric.com/apps/league_of_legends_server_status/2799
 
-## API Documentation
+## Developers only 
+
+### API Documentation
 
 ```
 /stats?region={REGION}&name={NAME}
@@ -24,7 +29,7 @@ Go to the LaMetric app store on the LaMetric App, and search for this App, and d
 
 `name` is your summoner name.
 
-## Install locally
+### Install locally
 1. `npm install`
 2. `npm start`
 
