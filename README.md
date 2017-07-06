@@ -9,7 +9,7 @@
 > LaMetric Clock is a hackable, real-time smart dashboard/clock. Receive and act on notifications, tasks, workout timers, business metrics, emails, news and more!
 
 ## Video Demo
-[![Demo Video](http://img.youtube.com/vi/KP0hYo1rOYo/0.jpg)](http://www.youtube.com/watch?v=KP0hYo1rOYo)
+[![Demo Video](http://img.youtube.com/vi/DW58gpeTgH4/0.jpg)](http://www.youtube.com/watch?v=DW58gpeTgH4)
 
 ## Usage
 Go to the LaMetric app store on the LaMetric App, and search for this App, and download.
