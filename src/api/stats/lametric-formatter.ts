@@ -1,3 +1,5 @@
+import * as logger from "winston";
+
 import { ChampDictionary } from "../../league/champ-dictionary";
 import { Utility } from "../../utility";
 
@@ -21,6 +23,8 @@ export class LaMetricFormatter {
         const frames: ILaMetricFrame[] = [];
         const lastGame = data[0];
         const currentYear = Utility.currentRankedYear;
+
+        logger.info(lastGame);
 
         frames.push({
             text: `Last Game Kills: ${lastGame.stats.kills}`,

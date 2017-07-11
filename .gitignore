@@ -45,3 +45,6 @@ typings
 
 # VSCode
 .vscode
+
+# Environment
+run.bat

@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import * as request from "request";
 import * as logger from "winston";
+
 import { ChampDictionary } from "../../league/champ-dictionary";
 import { RegionConverter } from "../region-converter";
 import { LaMetricFormatter } from "./lametric-formatter";
@@ -55,6 +56,8 @@ export class StatsRouter {
                 Promise.all([lastGamePromise]).then((stats) => {
                     this.laMetricFormatter.format(stats).then((laMetricOutput) => {
                         res.status(200).json(laMetricOutput);
+                    }).catch((err) => {
+                        logger.error(err);
                     });
                 }).catch((reason) => {
                     if (reason === "Private game") {
