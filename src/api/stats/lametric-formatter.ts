@@ -134,7 +134,7 @@ export class LaMetricFormatter {
         return num > 999 ? (num / 1000).toFixed(0) + "k" : num;
     }
 
-    private fetchSpree(kills: number) {
+    private fetchSpree(kills: number): string {
         switch (kills) {
             case 2:
                 return "double kill";
