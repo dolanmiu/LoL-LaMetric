@@ -15,6 +15,8 @@ interface ILaMetricFrame {
 const LOGO_WARD_ICON_STRING = "i7386";
 const LOGO_ICON_STRING = "i14209";
 const LOGO_WARD__DESTROY_ICON_STRING = "i14221";
+const LOGO_HEALING_ICON_STRING = "i14222";
+const LOGO_DEATH_ICON_STRING = "i14223";
 
 export class LaMetricFormatter {
 
@@ -34,13 +36,13 @@ export class LaMetricFormatter {
         });
 
         frames.push({
-            text: `${lastGame.stats.assists} Assists`,
+            text: `${lastGame.stats.assists} Asst`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `${lastGame.stats.deaths} Deaths`,
-            icon: LOGO_ICON_STRING,
+            text: `${lastGame.stats.deaths} dths`,
+            icon: LOGO_DEATH_ICON_STRING,
         });
 
         frames.push({
@@ -69,19 +71,21 @@ export class LaMetricFormatter {
         });
 
         frames.push({
-            text: `Heal ${this.kFormatter(lastGame.stats.totalHeal)}HP`,
-            icon: LOGO_ICON_STRING,
+            text: `${this.kFormatter(lastGame.stats.totalHeal)} HP`,
+            icon: LOGO_HEALING_ICON_STRING,
         });
 
         frames.push({
             text: `${lastGame.stats.largestKillingSpree} Spree`,
-            icon: LOGO_ICON_STRING,
+            icon: LOGO_DEATH_ICON_STRING,
         });
 
-        frames.push({
-            text: `${lastGame.stats.killingSprees === undefined ? 0 : lastGame.stats.killingSprees} Spree`,
-            icon: LOGO_ICON_STRING,
-        });
+        if (!!lastGame.stats.killingSprees && lastGame.stats.killingSprees > 1) {
+            frames.push({
+                text: `${this.fetchSpree(lastGame.stats.killingSprees)}`,
+                icon: LOGO_DEATH_ICON_STRING,
+            });
+        }
 
         frames.push({
             text: `${lastGame.stats.win ? "won" : "lost"}`,
@@ -138,5 +142,22 @@ export class LaMetricFormatter {
         const num = isNaN(input) ? parseInt(input, 10) : input;
 
         return num > 999 ? (num / 1000).toFixed(0) + "k" : num;
+    }
+
+    private fetchSpree(kills: number) {
+        switch (kills) {
+            case 2:
+                return "double kill";
+            case 3:
+                return "triple kill";
+            case 4:
+                return "quadra kill";
+            case 5:
+                return "penta kill";
+            case 6:
+                return "hexa kill";
+            default:
+                return "";
+        }
     }
 }
