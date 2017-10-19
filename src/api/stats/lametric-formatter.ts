@@ -12,7 +12,8 @@ interface ILaMetricFrame {
     icon: string;
 }
 
-const LOGO_ICON_STRING = "i7386";
+const LOGO_WARD_ICON_STRING = "i7386";
+const LOGO_ICON_STRING = "i14209";
 
 export class LaMetricFormatter {
 
@@ -27,69 +28,69 @@ export class LaMetricFormatter {
         logger.info(lastGame);
 
         frames.push({
-            text: `Last Game Kills: ${lastGame.stats.kills}`,
+            text: `${lastGame.stats.kills} Kills`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game Assists: ${lastGame.stats.assists}`,
+            text: `${lastGame.stats.assists} Assists`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game Deaths: ${lastGame.stats.deaths}`,
+            text: `${lastGame.stats.deaths} Deaths`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game you dealt ${lastGame.stats.totalDamageDealt} damage`,
+            text: `${lastGame.stats.totalDamageDealt} dmg`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game you taken ${lastGame.stats.totalDamageTaken} damage`,
+            text: `${lastGame.stats.totalDamageTaken} dmg`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game you placed ${lastGame.stats.wardsPlaced} wards`,
+            text: `${lastGame.stats.wardsPlaced} wards`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game you destroyed ${lastGame.stats.wardsKilled} wards`,
+            text: `X ${lastGame.stats.wardsKilled} wards`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game you earned ${lastGame.stats.goldEarned} gold`,
+            text: `${lastGame.stats.goldEarned}G`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game you healed ${lastGame.stats.totalHeal} HP`,
+            text: `Heal ${lastGame.stats.totalHeal}HP`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game Largest Killing Spree: ${lastGame.stats.largestKillingSpree}`,
+            text: `Spree: ${lastGame.stats.largestKillingSpree}`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Last Game killing spree: ${lastGame.stats.killingSprees === undefined ? 0 : lastGame.stats.killingSprees}`,
+            text: `Spree: ${lastGame.stats.killingSprees === undefined ? 0 : lastGame.stats.killingSprees}`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `You ${lastGame.stats.win ? "won" : "lost"} your last game`,
+            text: `You ${lastGame.stats.win ? "won" : "lost"}`,
             icon: LOGO_ICON_STRING,
         });
 
         return new Promise<ILaMetricOutput>((resolve) => {
             this.champPromise.then((champTable) => {
                 frames.push({
-                    text: `Last Game you played as ${champTable[lastGame.championId].name}`,
+                    text: `${champTable[lastGame.championId].name}`,
                     icon: LOGO_ICON_STRING,
                 });
 
