@@ -17,6 +17,7 @@ const LOGO_ICON_STRING = "i14209";
 const LOGO_WARD__DESTROY_ICON_STRING = "i14221";
 const LOGO_HEALING_ICON_STRING = "i14222";
 const LOGO_DEATH_ICON_STRING = "i14223";
+const LOGO_KDA_ICON_STRING = "i14226";
 
 export class LaMetricFormatter {
 
@@ -32,7 +33,7 @@ export class LaMetricFormatter {
 
         frames.push({
             text: `${lastGame.stats.kills}/${lastGame.stats.assists}/${lastGame.stats.deaths}`,
-            icon: LOGO_ICON_STRING,
+            icon: LOGO_KDA_ICON_STRING,
         });
 
         frames.push({
