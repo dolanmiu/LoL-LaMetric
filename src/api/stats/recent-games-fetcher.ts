@@ -52,7 +52,7 @@ export class RecentGamesFetcher {
                     return;
                 }
 
-                logger.info(body);
+                logger.debug(body);
 
                 const participant = body.participants.find((p, index) => {
                     return p.championId === championId;

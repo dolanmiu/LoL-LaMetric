@@ -14,6 +14,7 @@ interface ILaMetricFrame {
 
 const LOGO_WARD_ICON_STRING = "i7386";
 const LOGO_ICON_STRING = "i14209";
+const LOGO_WARD__DESTROY_ICON_STRING = "i14221";
 
 export class LaMetricFormatter {
 
@@ -25,7 +26,7 @@ export class LaMetricFormatter {
         const lastGame = data[0];
         const currentYear = Utility.currentRankedYear;
 
-        logger.info(lastGame);
+        logger.debug(lastGame);
 
         frames.push({
             text: `${lastGame.stats.kills} Kills`,
@@ -43,47 +44,47 @@ export class LaMetricFormatter {
         });
 
         frames.push({
-            text: `${lastGame.stats.totalDamageDealt} dmg`,
+            text: `${this.kFormatter(lastGame.stats.totalDamageDealt)} dmg`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `${lastGame.stats.totalDamageTaken} dmg`,
+            text: `${this.kFormatter(lastGame.stats.totalDamageTaken)} dmg`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `${lastGame.stats.wardsPlaced} wards`,
+            text: `${lastGame.stats.wardsPlaced} ward`,
             icon: LOGO_WARD_ICON_STRING,
         });
 
         frames.push({
-            text: `X ${lastGame.stats.wardsKilled} wards`,
+            text: `${lastGame.stats.wardsKilled} ward`,
+            icon: LOGO_WARD__DESTROY_ICON_STRING,
+        });
+
+        frames.push({
+            text: `${this.kFormatter(lastGame.stats.goldEarned)} G`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `${lastGame.stats.goldEarned}G`,
+            text: `Heal ${this.kFormatter(lastGame.stats.totalHeal)}HP`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Heal ${lastGame.stats.totalHeal}HP`,
+            text: `${lastGame.stats.largestKillingSpree} Spree`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Spree: ${lastGame.stats.largestKillingSpree}`,
+            text: `${lastGame.stats.killingSprees === undefined ? 0 : lastGame.stats.killingSprees} Spree`,
             icon: LOGO_ICON_STRING,
         });
 
         frames.push({
-            text: `Spree: ${lastGame.stats.killingSprees === undefined ? 0 : lastGame.stats.killingSprees}`,
-            icon: LOGO_ICON_STRING,
-        });
-
-        frames.push({
-            text: `You ${lastGame.stats.win ? "won" : "lost"}`,
+            text: `${lastGame.stats.win ? "won" : "lost"}`,
             icon: LOGO_ICON_STRING,
         });
 
@@ -97,6 +98,8 @@ export class LaMetricFormatter {
                 resolve({
                     frames,
                 });
+
+                logger.info(frames);
             });
         });
     }
@@ -128,5 +131,12 @@ export class LaMetricFormatter {
                 icon: LOGO_ICON_STRING,
             };
         }
+    }
+
+    // tslint:disable-next-line:no-any
+    private kFormatter(input: any): string | number {
+        const num = isNaN(input) ? parseInt(input, 10) : input;
+
+        return num > 999 ? (num / 1000).toFixed(0) + "k" : num;
     }
 }
