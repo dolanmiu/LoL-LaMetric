@@ -31,18 +31,8 @@ export class LaMetricFormatter {
         logger.debug(lastGame);
 
         frames.push({
-            text: `${lastGame.stats.kills} Kills`,
+            text: `${lastGame.stats.kills}/${lastGame.stats.assists}/${lastGame.stats.deaths}`,
             icon: LOGO_ICON_STRING,
-        });
-
-        frames.push({
-            text: `${lastGame.stats.assists} Asst`,
-            icon: LOGO_ICON_STRING,
-        });
-
-        frames.push({
-            text: `${lastGame.stats.deaths} dths`,
-            icon: LOGO_DEATH_ICON_STRING,
         });
 
         frames.push({
