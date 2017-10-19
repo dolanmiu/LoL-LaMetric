@@ -54,7 +54,7 @@ export class LaMetricFormatter {
 
         frames.push({
             text: `${lastGame.stats.wardsPlaced} wards`,
-            icon: LOGO_ICON_STRING,
+            icon: LOGO_WARD_ICON_STRING,
         });
 
         frames.push({
