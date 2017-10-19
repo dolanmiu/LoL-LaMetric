@@ -30,6 +30,7 @@
     ],
     "max-line-length": [
       false
-    ]
+    ],
+    "no-object-literal-type-assertion": false
   }
 }
