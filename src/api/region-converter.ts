@@ -8,8 +8,6 @@ export class RegionConverter {
                 return "EUN1";
             case "lan":
                 return "LA1";
-            case "ru":
-                return "RU";
             case "na":
                 return "NA1";
             case "tr":
