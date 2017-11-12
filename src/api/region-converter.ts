@@ -47,6 +47,8 @@ export class RegionConverter {
                 return "EUW1";
             case "la2":
                 return "LA2";
+            case "pbe":
+                return "PBE1";
             default:
                 throw new Error(`Cannot find ${region}`);
         }
