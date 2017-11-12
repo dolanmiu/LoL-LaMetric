@@ -77,7 +77,7 @@ export class StatsRouter {
             }).catch((reason) => {
                 res.status(500).json({
                     frames: [{
-                        text: `Cannot find ${name} in ${region}, or the server is down.`,
+                        text: `Cannot find ${name} in ${region}. Have you changed your name recently?`,
                     }],
                 } as ILaMetricOutput);
             });
