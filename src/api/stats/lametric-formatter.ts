@@ -35,7 +35,7 @@ export class LaMetricFormatter {
         logger.debug(lastGame);
 
         frames.push({
-            text: `${lastGame.stats.kills}/${lastGame.stats.assists}/${lastGame.stats.deaths}`,
+            text: `${lastGame.stats.kills}/${lastGame.stats.deaths}/${lastGame.stats.assists}`,
             icon: LOGO_KDA_ICON_STRING,
         });
 
